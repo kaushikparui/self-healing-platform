@@ -1,0 +1,7 @@
+{
+  "name": "worker",
+  "type": "module",
+  "dependencies": {
+    "prom-client": "^14.2.0"
+  }
+}
