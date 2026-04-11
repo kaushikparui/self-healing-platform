@@ -1,10 +1,9 @@
-FROM node:22-alpine
+FROM node:22
 
 WORKDIR /app
-
 COPY package.json .
 RUN npm install
 
-COPY src ./src
+COPY . .
 
-CMD ["node", "src/worker.js"]
+CMD ["node", "index.js"]

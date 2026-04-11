@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>DevOps Demo Dashboard</title>
+  <style>
+    body {
+      font-family: Arial;
+      background: #0f172a;
+      color: white;
+      text-align: center;
+      padding: 40px;
+    }
+    .card {
+      background: #1e293b;
+      padding: 20px;
+      margin: 20px;
+      border-radius: 10px;
+    }
+    button {
+      padding: 10px 20px;
+      background: #ef4444;
+      border: none;
+      color: white;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+    .good { color: #22c55e; }
+    .bad { color: #ef4444; }
+  </style>
+</head>
+
+<body>
+
+<h1>🚀 DevOps System Dashboard</h1>
+
+<div class="card">
+  <h2>System Status: <span id="status">Loading...</span></h2>
+</div>
+
+<div class="card">
+  <h2>Workers</h2>
+  <ul id="workers"></ul>
+</div>
+
+<div class="card">
+  <h2>Actions</h2>
+  <button onclick="crash()">💥 Trigger Worker Crash</button>
+</div>
+
+<div class="card">
+  <h2>Monitoring</h2>
+  <a href="https://grafana.devindevops.space" target="_blank">
+    <button>📊 Open Grafana</button>
+  </a>
+</div>
+
+<script>
+async function loadStatus() {
+  const res = await fetch("https://api.devindevops.space/status");
+  const data = await res.json();
+
+  document.getElementById("status").innerText = data.system;
+
+  const list = document.getElementById("workers");
+  list.innerHTML = "";
+
+  data.workers.forEach(w => {
+    const li = document.createElement("li");
+    li.innerText = `${w.name}: ${w.status}`;
+    li.className = w.status === "UP" ? "good" : "bad";
+    list.appendChild(li);
+  });
+}
+
+async function crash() {
+  await fetch("https://api.devindevops.space/crash");
+  alert("Crash triggered!");
+}
+
+setInterval(loadStatus, 3000);
+</script>
+
+</body>
+</html>

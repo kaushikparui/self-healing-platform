@@ -1,7 +1,9 @@
 {
   "name": "worker",
-  "type": "module",
+  "version": "1.0.0",
+  "main": "index.js",
   "dependencies": {
-    "prom-client": "^14.2.0"
+    "express": "^4.18.2",
+    "prom-client": "^15.0.0"
   }
 }
