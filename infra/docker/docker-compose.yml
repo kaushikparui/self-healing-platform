@@ -1,5 +1,3 @@
-version: "3.9"
-
 services:
 
   # 🔒 Reverse Proxy + SSL
@@ -48,6 +46,9 @@ services:
   worker-1:
     build: ../../services/worker
     restart: always
+    environment:
+      - WORKER_NAME=worker-1
+      - API_URL=http://api:3000
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:4000/health"]
       interval: 10s
@@ -58,6 +59,9 @@ services:
   worker-2:
     build: ../../services/worker
     restart: always
+    environment:
+      - WORKER_NAME=worker-2
+      - API_URL=http://api:3000
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:4000/health"]
       interval: 10s
