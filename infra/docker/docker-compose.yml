@@ -3,6 +3,8 @@ services:
   # 🔒 Reverse Proxy + SSL
   traefik:
     image: traefik:v3.0
+    environment:
+      - DOCKER_API_VERSION=1.43
     command:
       - "--providers.docker=true"
       - "--entrypoints.web.address=:80"
@@ -10,12 +12,14 @@ services:
       - "--certificatesresolvers.myresolver.acme.tlschallenge=true"
       - "--certificatesresolvers.myresolver.acme.email=your-email@example.com"
       - "--certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json"
+      - "--providers.docker.endpoint=unix:///var/run/docker.sock"
+      - "--providers.docker.useBindPortIP=true"
     ports:
       - "80:80"
       - "443:443"
     volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
       - ./letsencrypt:/letsencrypt
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
     restart: always
 
   # 🌍 Frontend
@@ -26,6 +30,7 @@ services:
       - "traefik.http.routers.frontend.rule=Host(`app.devindevops.space`)"
       - "traefik.http.routers.frontend.entrypoints=websecure"
       - "traefik.http.routers.frontend.tls.certresolver=myresolver"
+      - "traefik.http.services.frontend.loadbalancer.server.port=80"
 
   # ⚙️ API
   api:
